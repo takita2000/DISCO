@@ -16,19 +16,17 @@ Table LineData(i,j,*)     Data of each line
 1.2              0.1
 1.3              0.2
 2.3              0.3
+
 ;
-LineData(j,i,*)=LineData(i,j,*)
+LineData(i,j,'react')$(ord(i)>ord(j))=LineData(j,i,'react');
 
 parameter con(i,j)       conectivity of two buses
 /
 1.2 yes
 1.3 yes
 2.3 yes
-2.1 yes
-3.1 yes
-3.2 yes
 /;
-
+con(i,j)$(ord(i)>ord(j))=con(j,i);
 
 variable
 z        objective value
