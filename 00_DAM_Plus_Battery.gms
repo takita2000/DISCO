@@ -1,114 +1,57 @@
 sets
-i bus numbers  /1*33/
-head1 heads    /react, FT/
+i bus numbers  /1*3/
 alias (i,j)
 
 
+parameter PD(i) Demand of each bus
+/
+1 0
+2 3.4
+3 1.9
 
+/
 
-
-Table LineData(i,j,head1)
-          FT          react
-1.2       1          0.0477
-2.3       1          0.2511
-3.4       1          0.1864
-4.5       1          0.1941
-5.6       1          0.707
-6.7       1          0.6188
-7.8       1          0.2351
-8.9       1          0.74
-9.10      1          0.74
-10.11     1          0.065
-11.12     1          0.1238
-12.13     1          1.155
-13.14     1          0.7129
-14.15     1          0.526
-15.16     1          0.545
-16.17     1          1.721
-17.18     1          0.574
-2.19      1          0.1565
-19.20     1          1.3554
-20.21     1          0.4784
-21.22     1          0.9373
-3.23      1          0.3083
-23.24     1          0.7091
-24.25     1          0.7011
-6.26      1          0.1034
-26.27     1          0.1447
-27.28     1          0.9337
-28.29     1          0.7006
-29.30     1          0.2585
-30.31     1          0.963
-31.32     1          0.3619
-
+Table LineData(i,j,*)     Data of each line
+                 react
+1.2              0.1
+1.3              0.2
+2.3              0.3
 ;
+LineData(j,i,*)=LineData(i,j,*)
 
-
-parameter con(i,j)
+parameter con(i,j)       conectivity of two buses
 /
 1.2 yes
-2.(1,3,19,23) yes
-3.(2,4,23) yes
-4.(3,5) yes
-5.(4,6) yes
-6.(5,7,26) yes
-7.(6,8) 1
-8.(7,9) 1
-9.(8,10) 1
-10.(9,11) 1
-11.(10,12) 1
-12.(11,13) 1
-13.(12,14) 1
-14.(13,15) 1
-15.(14,16) 1
-16.(15,17) 1
-17.(16,18) 1
-18.(17) 1
-19.(2,20) 1
-20.(19,21) 1
-21.(20,22) 1
-22.(21) 1
-23.(3,24) 1
-24.(23,25) 1
-25.(24) 1
-26.(6,27) 1
-27.(26,28) 1
-28.(27,29) 1
-29.(28,30) 1
-30.(29,31) 1
-31.(30,32) 1
-32.(31,33) 1
-33.(32) 1
+1.3 yes
+2.3 yes
+2.1 yes
+3.1 yes
+3.2 yes
 /;
 
 
-
 variable
-z
-delta(i)
-P(i,j)
-AP(i)
-dummy
-
+z        objective value
+delta(i) angle of each bus
+PF(i,j)  Active power flowing from bus i to bus j
+P(i)     Net active power of each bus
+PG(i)    Active power generated from each bus
+;
+PG.fx('2')=2;
+PG.fx('3')=0;
+delta.fx('1')=0;
 equations
-obj
-powerflow
-kcl
-
-
-
-
-
-
-
+obj              objective function
+powerflow        powerflow
+kcl              kcl in each node
+Netpower         Net power in each node
 ;
 
 
-
 obj.. z=e=1;
-powerflow(i,j)$LineData(i,j,'Ft')..   P(i,j)=e=(delta(i)-delta(j))/ LineData(i,j,'react')   ;
-kcl(i).. AP(i)=e=sum(j$con(i,j),p(i,j))
-
+powerflow(i,j)$(ord(i) ne  ord(j))..   PF(i,j)=e=(delta(i)-delta(j))/ LineData(i,j,'react')   ;
+kcl(i).. P(i)=e=sum(j$con(i,j),pF(i,j))  ;
+Netpower(i).. P(i)=e=PG(i)-PD(i);
 
 
 model DCPF /all/

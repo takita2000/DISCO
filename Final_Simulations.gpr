@@ -347,9 +347,6 @@ RMIQCP=CPLEX
 [RP:DAM]
 1=
 
-[RP:UNTITLED_1]
-1=
-
 [RP:SC1_DA+RT_DAM]
 1=
 
@@ -393,25 +390,26 @@ PlaneRownr=-1
 [RP:00_DAM_PLUS_BATTERY - 1]
 1=
 
+[OPENWINDOW_1]
+MAXIM=0
+TOP=182
+LEFT=182
+HEIGHT=416
+WIDTH=1154
+
+[RP:UNTITLED_1]
+1=
+
 [RP:00_DAM_PLUS_BATTERY]
 1=
 
 [MRUFILES]
-1=C:\Users\REZA\OneDrive\Second_Article_2\02_1_Simulations\GITGITDISCO\00_DAM_Plus_Battery.gms
-2=C:\Users\REZA\OneDrive\Second_Article_2\02_1_Simulations\GITGITDISCO\DISCO\00_DAM_Plus_Battery.gms
-3=C:\Users\REZA\OneDrive\Second_Article_2\02_1_Simulations\GAMSCODE\00_DAM_Plus_Battery.lst
-4=C:\Users\REZA\OneDrive\Second_Article_2\02_1_Simulations\GAMSCODE\00_DAM_Plus_Battery.gms
-5=C:\Users\REZA\OneDrive\Second_Article_2\02_1_Simulations\GAMSCODE\00_DAM_Plus_Battery - 1.gms
-6=C:\Users\REZA\OneDrive\Second_Article_2\02_1_Simulations\GAMSCODE\01_DAM.gms
-7=C:\Users\REZA\OneDrive\Second_Article_2\02_Simulations\00_Total_Code\00_DAM_Plus_Battery.lst
-8=C:\Users\REZA\OneDrive\Second_Article_2\02_Simulations\00_Total_Code\00_DAM_Plus_Battery.gms
-9=E:\PhD\Courses\Conejo\Nonlinear Programming\6. GAMS\opf.gms
-
-[OPENWINDOW_1]
-FILE0=C:\Users\REZA\OneDrive\Second_Article_2\02_1_Simulations\GITGITDISCO\DISCO1\00_DAM_Plus_Battery - 1.gms
-FILE1=C:\Users\REZA\OneDrive\Second_Article_2\02_1_Simulations\GITGITDISCO\DISCO1\00_DAM_Plus_Battery - 1.gms
-MAXIM=1
-TOP=130
-LEFT=130
-HEIGHT=416
-WIDTH=1154
+1=C:\Users\REZA\OneDrive\Second_Article_2\05_Git_Code\00_DAM_Plus_Battery.gms
+2=C:\Users\REZA\OneDrive\Second_Article_2\05_Git_Code\00_DAM_Plus_Battery.lst
+3=C:\Users\REZA\OneDrive\Second_Article_2\05_Git_Code\Untitled_1.gms
+4=C:\Users\REZA\OneDrive\Second_Article_2\02_1_Simulations\GITGITDISCO\00_DAM_Plus_Battery.gms
+5=C:\Users\REZA\OneDrive\Second_Article_2\02_1_Simulations\GITGITDISCO\DISCO\00_DAM_Plus_Battery.gms
+6=C:\Users\REZA\OneDrive\Second_Article_2\02_1_Simulations\GAMSCODE\00_DAM_Plus_Battery.lst
+7=C:\Users\REZA\OneDrive\Second_Article_2\02_1_Simulations\GAMSCODE\00_DAM_Plus_Battery.gms
+8=C:\Users\REZA\OneDrive\Second_Article_2\02_1_Simulations\GAMSCODE\00_DAM_Plus_Battery - 1.gms
+9=C:\Users\REZA\OneDrive\Second_Article_2\02_1_Simulations\GAMSCODE\01_DAM.gms
