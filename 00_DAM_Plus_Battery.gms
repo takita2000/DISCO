@@ -247,6 +247,14 @@ parameter TrMAX(pq)
 /
 
 *********************************************************
+** Phase 6 **************************************
+table bdat(bb,*) battery  data
+       EtaCh  EtaDch   PchMAX   PdchMAX   SoC0      SoCMax    SoCMin
+10     0.95   0.95     50       50        0.15      0.95      0.05
+17     0.95   0.95     50       50        0.15      0.95      0.05
+20     0.95   0.95     50       50        0.15      0.95      0.05
+30     0.95   0.95     50       50        0.15      0.95      0.05
+*************************************************
 
 
 variable
@@ -258,35 +266,38 @@ P(i)     Net active power of each bus
 PG(g,t,s)    Active power generated from each bus
 
 
+** Phase 6 **************************************
+SoC(bb,t,s)    state of charge of batteries
+Pdch(bb,t,s)   discharge power of batteries
+Pch(bb,t,s)    charge power of batteries
+PESS(bb,t,s)   power exchange of the battery
+x(bb,t,s)      binary variable if 1 charge if 0 discharge
+
+*************************************************
 **********************************************************
+
+
 
 ***PH 3****************************************************
 PDAIL(t,s)  sum of active power curtilement
 PIL(pq,t,s)   active power curtilement in each load bus
 ;
 
-*PG.up(gg,t,s)=gdat(gg,'pmax');
-*PG.lo(gg,t,s)=gdat(gg,'pmin');
-delta.fx(slack,t,s)=0;
-
 binary variables v(gg,t,s)  ,y(gg,t,s),z(gg,t,s);
+positive variable PDA(t,s),PIL(pq,t,s),Pdch(bb,t,s), Pch(bb,t,s)  , SoC(bb,t,s);
+
+PG.up(gg,t,s)=gdat(gg,'pmax');
+PG.lo(gg,t,s)=gdat(gg,'pmin');
+delta.fx(slack,t,s)=0;
 PF.up(i,j,t,s)$(conex(i,j))=branch(i,j,'limit') ;
 PF.lo(i,j,t,s)$(conex(i,j))=-branch(i,j,'limit') ;
 *** PHase2*************************
 PG.fx(g,'t0',s)=0;
 v.fx(gg,'t0',s)=0;
+SoC.fx(bb,'t24',s)=bdat(bb,'SOC0');
+Soc.lo(bb,t,s)=bdat(bb,'SOCMIN');
+PESS.fx(bb,'t0',s)=0;
 ***********************************
-
-
-
-** Phase 6 **************************************
-table bdat(bb,*) battery  data
-       EtaCh  EtaDch   PchMAX   PdchMAX   SoC0      SoCMax    SoCMin
-10     0.95   0.95     0.1      0.1       0.15      0.95      0.05
-17     0.95   0.95     0.1      0.1       0.15      0.95      0.05
-20     0.95   0.95     0.1      0.1       0.15      0.95      0.05
-30     0.95   0.95     0.1      0.1       0.15      0.95      0.05
-*************************************************
 
 
 
@@ -310,6 +321,15 @@ eq7
 eq15
 eq16
 *****************************************
+
+** Phase 6 **************************************
+eq41
+eq41_1
+eq42
+eq43
+eq44
+eq47
+*************************************************
 ;
 
 obj.. zz=e=sum((t,s),prob(s)*lambdaDA(t,s)*PG('1',t,s))
@@ -335,12 +355,12 @@ eq16(t,s).. sum(pq,PIL(pq,t,s))=e=PDAIL(t,s);
 
 
 ** Phase 6 **************************************
-eq41(b,t,s)$(ord(t) gt 1)..  SoC(b,t,s)  =e= SoC(b,t-1,s)-Pdch(b,t,s)/bdat(b,'EtadCh')+Pch(b,t,s)*bdat(b,'EtaCh');
-eq41_1(b,t,s)$(ord(t) eq 1)..  SoC(b,t,s)  =e= bdat(b,'SoC0') -Pdch(b,t,s)+Pch(b,t,s);
-eq42(b,t,s)..                PESS(b,t,s) =e= Pdch(b,t,s)-Pch(b,t,s);
-eq43(b,t,s)..                Pch(b,t,s)  =l= x(b,t,s)*bdat(b,'PchMAX');
-eq44(b,t,s)..                Pdch(b,t,s) =l= (1-x(b,t,s))*bdat(b,'PdchMAX');
-eq47(b,t,s)..                SoC(b,t,s)=l=bdat(b,'SoCMAX');
+eq41(bb,t,s)$(ord(t) gt 1)..  SoC(bb,t,s)  =e= SoC(bb,t-1,s)-Pdch(bb,t,s)/(300*bdat(bb,'EtadCh'))+(Pch(bb,t,s)/300)*bdat(bb,'EtaCh');
+eq41_1(bb,t,s)$(ord(t) eq 1)..  SoC(bb,t,s)  =e= bdat(bb,'SoC0') -Pdch(bb,t,s)/300+Pch(bb,t,s)/300;
+eq42(bb,t,s)..                PESS(bb,t,s) =e= Pdch(bb,t,s)-Pch(bb,t,s);
+eq43(bb,t,s)..                Pch(bb,t,s)  =l= x(bb,t,s)*bdat(bb,'PchMAX');
+eq44(bb,t,s)..                Pdch(bb,t,s) =l= (1-x(bb,t,s))*bdat(bb,'PdchMAX');
+eq47(bb,t,s)..                SoC(bb,t,s)=l=bdat(bb,'SoCMAX');
 *************************************************
 
 ********************************************************************
