@@ -175,7 +175,75 @@ table gdat(gg,*) unit data
 
 *gdat(gg,pheads)=(gdat(gg,pheads))/1000/ Sbase;
 
-display PD , GDAT
+
+*********************************************************
+
+*** PHase 3 *********************************************
+parameter BetaIL(t)
+/
+t1  60
+t2  60
+t3  60
+t4  60
+t5  60
+t6  60
+t7  60
+t8  60
+t9  60
+t10 60
+t11 60
+t12 60
+t13 60
+t14 60
+t15 60
+t16 60
+t17 60
+t18 60
+t19 60
+t20 60
+t21 60
+t22 60
+t23 60
+t24 60
+/
+
+parameter TrMAX(pq)
+/
+
+2        500
+3        500
+4        500
+5        500
+6        500
+7        500
+8        500
+9        500
+10        500
+11        500
+12        500
+13        500
+14        500
+15        500
+16        500
+17        500
+18        500
+19        500
+20        500
+21        500
+22        500
+23        500
+24        500
+25        500
+26        500
+27        500
+28        500
+29        500
+30        500
+31        500
+32        500
+33        500
+/
+
 *********************************************************
 
 
@@ -189,6 +257,10 @@ PG(g,t,s)    Active power generated from each bus
 
 
 **********************************************************
+
+***PH 3****************************************************
+PDAIL(t,s)  sum of active power curtilement
+PIL(pq,t,s)   active power curtilement in each load bus
 ;
 
 *PG.up(gg,t,s)=gdat(gg,'pmax');
@@ -220,10 +292,17 @@ eq9
 eq10
 eq14
 *****************************************
+
+*** PH3 ADDING  INTERRUPTIBLE ***********
+*eq7
+*eq15
+*eq16
+*****************************************
 ;
 
 obj.. zz=e=sum((t,s),prob(s)*lambdaDA(t,s)*PG('1',t,s))
-+sum((t,gg,s),prob(s)*(gdat(gg,'a')*v(gg,t,s)+gdat(gg,'b')*y(gg,t,s)+gdat(gg,'c')*z(gg,t,s)+gdat(gg,'d')*PG(gg,t,s)))    ;
++sum((t,gg,s),prob(s)*(gdat(gg,'a')*v(gg,t,s)+gdat(gg,'b')*y(gg,t,s)+gdat(gg,'c')*z(gg,t,s)+gdat(gg,'d')*PG(gg,t,s)))   ;
+*+sum((t,s),BetaIL(t)*PDAIL(t,s))   ;
 powerflow(i,j,t,s)$conex(i,j)..   PF(i,j,t,s)=e=(delta(i,t,s)-delta(j,t,s))*branch(i,j,'bij');
 kcl(i,t,s).. sum(g$GB(i ,g),Pg(g,t,s))-PD(i,t,s)=e=+sum(j$conex(i, j),PF(i,j,t,s));
 
@@ -235,6 +314,16 @@ eq10(gg,t,s)$(ord(t) gt 1)..     PG(gg,t-1,s)-PG(gg,t,s)=l=gdat(gg,'rdown');
 eq14(gg,t,s)$(ord(t) gt 1)..     y(gg,t,s)-z(gg,t,s)=e=v(gg,t,s)-v(gg,t-1,s);
 *********************************************************************
 
+*** PH3*************************************************************
+** Phase 4 **************************************
+*eq7(pq,t,s)..  PD(pq,t,s)-sum(gg$GB(pq ,gg),Pg(gg,t,s)) =l= TrMAX(pq);
+*eq15(pq,t,s).. PIL(pq,t,s) =l= 0.1*PD(pq,t,s);
+*eq16(t,s).. sum(pq,PIL(pq,t,s))=e=PDAIL(t,s);
+*************************************************
+
+
+
+********************************************************************
 
 model DCPF /all/
 solve DCPF minimizing zz using mip
