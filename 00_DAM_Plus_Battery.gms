@@ -2,24 +2,11 @@ sets
 i bus numbers  /1*33/
 slack(i) slack bus /1/
 pq(i) pq buses    /2*33/
-Gen(i) index of generators /4,14 /
-
+g(i) index of generators /1, 4 , 14/
+gg(g) pq bus with generators /4, 14/
 pheads heads of generators /pmin,  pmax,   rdown,  rup /
-
-
+GB(i,g)  /1.1, 4.4 , 14.14/
 alias (i,j)
-
-scalar BASE_MVA /100/;
-scalar BASE_KV /12.66/;
-
-scalars
-Vbase
-Sbase
-Zbase
-;
-Vbase = BASE_KV * 10**3;
-Sbase = BASE_MVA * 10**6;
-Zbase = Vbase**2 / Sbase;
 
 parameter PD(i) Demand of each bus   in kw
 /
@@ -59,135 +46,114 @@ parameter PD(i) Demand of each bus   in kw
 
 / ;
 
-PD(i)=(PD(i)/1000)/ Sbase;
 
 
-Table LineData(i,j,*)     Data of each line
-                    react         con       limit
-1.2                 0.0470        yes       1000
-2.3                 0.2511        yes       1000
-3.4                 0.1864        yes       1000
-4.5                 0.1941        yes       1000
-5.6                 0.7070        yes       1000
-6.7                 0.6188        yes       1000
-7.8                 0.2351        yes       1000
-8.9                 0.7400        yes       1000
-9.10                0.7400        yes       1000
-10.11               0.0650        yes       1000
-11.12               0.1238        yes       1000
-12.13               1.1550        yes       1000
-13.14               0.7129        yes       1000
-14.15               0.5260        yes       1000
-15.16               0.5450        yes       1000
-16.17               1.7210        yes       1000
-17.18               0.5740        yes       1000
-2.19                0.1565        yes       1000
-19.20               1.3554        yes       1000
-20.21               0.4784        yes       1000
-21.22               0.9373        yes       1000
-3.23                0.3083        yes       1000
-23.24               0.7091        yes       1000
-24.25               0.7011        yes       1000
-6.26                0.1034        yes       1000
-26.27               0.1447        yes       1000
-27.28               0.9337        yes       1000
-28.29               0.7006        yes       1000
-29.30               0.2585        yes       1000
-30.31               0.9630        yes       1000
-31.32               0.3619        yes       1000
-32.33               0.5302        yes       1000
+table branch(i,j,*) Network technical characteristics
+                    x                   limit
+1.2                 0.0470              1000
+2.3                 0.2511              1000
+3.4                 0.1864              1000
+4.5                 0.1941              1000
+5.6                 0.7070              1000
+6.7                 0.6188              1000
+7.8                 0.2351              1000
+8.9                 0.7400              1000
+9.10                0.7400              1000
+10.11               0.0650              1000
+11.12               0.1238              1000
+12.13               1.1550              1000
+13.14               0.7129              1000
+14.15               0.5260              1000
+15.16               0.5450              1000
+16.17               1.7210              1000
+17.18               0.5740              1000
+2.19                0.1565              1000
+19.20               1.3554              1000
+20.21               0.4784              1000
+21.22               0.9373              1000
+3.23                0.3083              1000
+23.24               0.7091              1000
+24.25               0.7011              1000
+6.26                0.1034              1000
+26.27               0.1447              1000
+27.28               0.9337              1000
+28.29               0.7006              1000
+29.30               0.2585              1000
+30.31               0.9630              1000
+31.32               0.3619              1000
+32.33               0.5302              1000
 ;
-LineData(i,j,'react')$(LineData(i,j,'react')=0)=LineData(i,j,'react');
-LineData(i,j,'con')$(LineData(i,j,'con')=0)=LineData(i,j,'con');
-LineData(i,j,'Limit')$(LineData(i,j,'Limit')=0)=LineData(i,j,'Limit') ;
+
+branch(i , j , 'x' )$(branch(i,j,'x')=0)=branch(j,i,'x');
+branch(i,j,'Limit')$(branch(i,j,'Limit')=0)=branch(j, i , 'Limit') ;
+branch (i,j ,'bij')$branch (i, j ,'Limit') =1/ branch ( i ,j , 'x' ) ;
 
 
-parameter conex(i, j) ;
-conex(i,j)$(LineData(i,j,'con') and LineData (i, j,'con'))=1;
-conex(i,j)$(conex(i ,j))=1;
+parameter conex   ;
+conex (i,j)$(branch(i,j,'limit') and branch(j,i,'limit'))=1;
+conex (i,j)$(conex(i,j))=1;
 
 
-LineData(i,j,'react')=LineData(i,j,'react')/Zbase;
-LineData(i,j,'Limit')=(LineData(i,j,'Limit')/1000)/ Sbase;
+
 * PHASE 2 ***********************************************
-table gdat(g,*) unit data
-       pmin  pmax   rdown  rup    a      b         c      d       PG0   V0    MUP   MDN
-4      100   1000   200    200    1      25        10     80      0     0     1     1
-14     100   1000   200    200    1      25        10     80      0     0     1     1
+table gdat(gg,*) unit data
+       pmin   pmax         rdown  rup    a      b         c      d       PG0   V0    MUP   MDN
+4      100    500          200    200    1      25        10     80      0     0     1     1
+14     100    500          200    200    1      25        10     80      0     0     1     1
 
 ;
 
-gdat(g,pheads)=(gdat(g,pheads)/1000)/ Sbase;
-display gdat
+*gdat(gg,pheads)=(gdat(gg,pheads))/1000/ Sbase;
 
-Set GB( i ,Gen) connectivity index of each generating unit to each bus
-/ 4.g4, 14.g14 / ;
+display PD , GDAT
 *********************************************************
-
 
 
 variable
 z        objective value
 delta(i) angle of each bus
-Pij(i,j)  Active power flowing from bus i to bus j
+PF(i,j)  Active power flowing from bus i to bus j
 P(i)     Net active power of each bus
-PG(i)    Active power generated from each bus
+PG(g)    Active power generated from each bus
 ;
 
-PG.fx(pq)=0;
-PG.up(g)=gdat(g,'pmax');
-PG.lo(g)=gdat(g,'pmin');
+PG.up(gg)=gdat(gg,'pmax');
+PG.lo(gg)=gdat(gg,'pmin');
 delta.fx(slack)=0;
 
-
-display PG.up
 
 
 equations
 obj              objective function
 powerflow(i,j)        powerflow
 kcl              kcl in each node
-Netpower         Net power in each node
-
-* PHASE 2 **********************************************
 
 
-*******************************************************
 ;
 
+obj.. z=e=10*PG('1')+PG('4')+1*PG('14');
+powerflow(i,j)$conex(i,j)..   PF(i,j)=e=(delta(i)-delta(j))*branch(i,j,'bij');
+kcl(i).. sum(g$GB(i ,g),Pg(g))-PD(i)=e=+sum(j$conex(i, j),PF(i,j));
+;
 
-obj.. z=e=1000*PG('1')+100*PG('14')+10*PG('4');
-powerflow(i,j)$(conex(i,j))..   Pij(i,j)=e=(delta(i)-delta(j))/ LineData(i,j,'react')   ;
-kcl(i).. P(i)=e=sum(j$LineData(i,j,'con') ,pF(i,j))  ;
-Netpower(i).. P(i)=e=+sum(Gen$GB(i ,Gen), Pg(Gen))  -PD(i);
-
-
-const2 ( bus , t ) . . +sum( Gen$GB ( bus , Gen ) , Pg ( Gen , t ) )
-WD ( t , ’ d ’ )BusData ( bus , ’pd ’ ) / Sbase=e=+sum( node$conex (node , bus ) ,Pij ( bus , node , t ) ) ;
-* PHASE 2 **********************************************
-
-
-*******************************************************
 
 model DCPF /all/
 solve DCPF minimizing z using lp
 
 
 parameters   PF_actual(i,j), P_actual(i),  PG_actual(i);
-PF_actual(i,j)=PF.l(i,j)*Sbase;
-P_actual(i)=P.l(i)*Sbase ;
-PG_actual(i)=PG.l(i)*Sbase;
-
+PF_actual(i,j)=PF.l(i,j);
+PG_actual(g)=PG.l(g);
 
 
 parameter sumpg, sumpd   ;
-sumpg= sum(i,PG.l(i));
+sumpg= sum(g,PG.l(g));
 sumpd= sum(i,Pd(i)) ;
 
 
 
 
 
-display PF_actual, P_actual,  PG_actual , sumpg , sumpd;
+display PF_actual,  PG_actual , sumpg , sumpd;
 
 
