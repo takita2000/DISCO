@@ -5,10 +5,10 @@ i bus number /i1*i33/
 load(i) PQ busese in the grid /i2*i33/
 slack(i) substation bus   /i1/
 l levels of IL contracts /1*5/
-g        index of DG units /g18, g22 , g33/
-b        index of DG units /b25/
-g2i(g,i) units to nodes /g18.i18, g22.i22, g33.i33/
-b2i(b,i) units to nodes /b25.i25/;
+g        index of DG units /g22 , g25/
+b        index of DG units /b18 , b33/
+g2i(g,i) units to nodes /g22.i22, g25.i25/
+b2i(b,i) units to nodes /b18.i18 , b33.i33/;
 alias(i,j)
 
 ** PARAMETERS *******************************************************************************************
@@ -144,7 +144,7 @@ i31        150          70         1            1
 i32        210          100        1            1
 i33        60           40         1            1
 ;
-Busdat(i,'vmin')=Busdat(i,'vmin')*0.8;
+Busdat(i,'vmin')=Busdat(i,'vmin')*0.7;
 Busdat(i,'vmax')=Busdat(i,'vmax')*1.1;
 
 Parameter Pdem1(i), QDem1(i), TPdem, LW(i),LWQ(i), PD(i),QD(i), PHI;
@@ -161,10 +161,9 @@ PHI(load)=arctan(QD(load)/PD(load));
 table gdat(g,*) unit data
        pmin  pmax  qmin  qmax   t      s      a       b      c
 *      (MW)  (MW)            (MW/h) (MW/h) ($) ($) ($)  ($/MWh)
-g18    0.1   0.5   0     0.35   0.2    0.2    0.005   35     15
-g22    0.1   0.4   0     0.2    0.2    0.2    0.003   50     20
-*g25    0.1   0.4   0     0.25   0.2    0.2    0.004   65     50
-g33    0.1   0.5   0     0.5    0.2    0.2    0.002   40     25
+g22    0.1   1     0     0.2    0.2    0.2    0.003   20     20
+g25    0.1   1     0     0.25   0.2    0.2    0.004   20     50
+
 ;
 
 **PASE 3****************************************************
@@ -358,7 +357,8 @@ eq17..      CF=e=LambdaRT*(PRT-PDA_STAR)+sum(g,gdat(g,'a')*PDG(g)**2+gdat(g,'b')
 eq18(i)..  pn(i)=e=sum(j,v(i)*v(j)*Ldat(i,j,'yl')*cos(delta(i)-delta(j)-Ldat(i,j,'thel')));
 eq19(i)..  qn(i)=e=sum(j,v(i)*v(j)*Ldat(i,j,'yl')*sin(delta(i)-delta(j)-Ldat(i,j,'thel')));
 
-eq20(load)..  sum(g$g2i(g,load),PDG(g))+PIL(load)+sum(b$b2i(b,load),PESS_STAR(b))+PIL(load)-PD(load)=e=pn(load);
+eq20(load)..  sum(g$g2i(g,load),PDG(g))+PIL(load)+sum(b$b2i(b,load),PESS_STAR(b))-PD(load)=e=pn(load);
+*eq20(load)..  sum(g$g2i(g,load),PDG(g))+PIL(load)+PIL(load)-PD(load)=e=pn(load);
 eq21(load)..  sum(g$g2i(g,load),QDG(g))+QIL(load)-QD(load)=e=qn(load);
 eq22(slack)..  PRT=e=pn(slack);
 eq23(slack)..  QRT=e=qn(slack);
@@ -401,8 +401,11 @@ solve RTOM minimizing CF using nlp
 parameter Demand;
 Demand=sum(load,PD(load))
 
+parameter Los;
+los=PRT.l+sum(g,PDG.l(g))+SUM(load,PIL.l(load))-Demand;
+
 parameter RealPRT;
-realPRT=PRT.l-PDA_STAR;
+realPRT=PRT.l-PDA_STAR-.333333*los;
 
 parameter SUMPG;
 SUMPG=sum(g,PDG.l(g))
@@ -420,7 +423,9 @@ parameter ILCOST;
 ILCOST=sum(load,sum(l,PILL.l(load,l)*lambdaIL(load,l)))
 
 parameter Loss;
-loss=PDA_STAR+realPRT+SUMPG+SUMIL-Demand;
+loss=0.3333*los;
+
+PDA_STAR= PDA_STAR-0.333333*los;
 
 display Demand,PDA_STAR, realPRT, SUMPG, SUMIL, loss, PIL.l, PDG.l, PD , pk1, COSTRT , COSTDGRT,ILCOST,v.l
 

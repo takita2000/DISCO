@@ -381,9 +381,6 @@ Order=1,2,3,4
 Decim=7
 PlaneRownr=-1
 
-[RP:00_RTM ]
-1=
-
 [RP:OPF]
 1=
 
@@ -393,17 +390,13 @@ PlaneRownr=-1
 [RP:00_DAM_PLUS_BATTERY - 1]
 1=
 
-[OPENWINDOW_1]
-MAXIM=0
-TOP=0
-LEFT=0
-HEIGHT=416
-WIDTH=1154
-
 [RP:UNTITLED_6]
 1=
 
 [RP:00_DAM_PLUS_BATTERY]
+1=
+
+[RP:00_RTM ]
 1=
 
 [MRUFILES]
@@ -415,4 +408,13 @@ WIDTH=1154
 6=C:\Users\REZA\OneDrive\Second_Article_2\02_1_Simulations\GAMSCODE\00_DAM_Plus_Battery.lst
 7=C:\Users\REZA\OneDrive\Second_Article_2\02_1_Simulations\GAMSCODE\00_DAM_Plus_Battery.gms
 8=C:\Users\REZA\OneDrive\Second_Article_2\02_1_Simulations\GAMSCODE\00_DAM_Plus_Battery - 1.gms
-9=C:\Users\REZA\OneDrive\Second_Article_2\02_1_Simulations\GAMSCODE\01_DAM.gms
+
+[OPENWINDOW_1]
+FILE0=C:\Users\REZA\OneDrive\Second_Article_2\05_Git_Code\00_RTM .gms
+FILE1=C:\Users\REZA\OneDrive\Second_Article_2\05_Git_Code\00_RTM .lst
+FILE2=C:\Users\REZA\OneDrive\Second_Article_2\05_Git_Code\00_RTM .lst
+MAXIM=0
+TOP=0
+LEFT=0
+HEIGHT=416
+WIDTH=1154
