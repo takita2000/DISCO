@@ -324,7 +324,7 @@ eq14(gg,t,s)$(ord(t) gt 1)..     y(gg,t,s)-z(gg,t,s)=e=v(gg,t,s)-v(gg,t-1,s);
 
 
 ********************************************************************
-
+option optcr=0
 model DCPF /all/
 solve DCPF minimizing zz using mip
 
