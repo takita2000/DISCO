@@ -180,24 +180,33 @@ display PD , GDAT
 
 
 variable
-z        objective value
+zz        objective value
 delta(i,t,s) angle of each bus
 PF(i,j,t,s)  Active power flowing from bus i to bus j
 P(i)     Net active power of each bus
+*****Phase 2***********************************************
 PG(g,t,s)    Active power generated from each bus
+
+
+**********************************************************
 ;
 
 PG.up(gg,t,s)=gdat(gg,'pmax');
 PG.lo(gg,t,s)=gdat(gg,'pmin');
 delta.fx(slack,t,s)=0;
 
-
+binary variables v(gg,t,s)  this variable is 1 if unit g is on in hour t ;
 PF.up(i,j,t,s)$(conex(i,j))=branch(i,j,'limit') ;
 PF.lo(i,j,t,s)$(conex(i,j))=-branch(i,j,'limit') ;
-
+*** PHase2*************************
 PG.fx(g,'t0',s)=0;
+v.fx(gg,'t0',s)=0;
+***********************************
 
 
+
+
+;
 
 equations
 obj              objective function
@@ -205,12 +214,13 @@ powerflow(i,j,t,s)        powerflow
 kcl              kcl in each node
 ;
 
-obj.. z=e=sum((t,s),prob(s)*lambdaDA(t,s)*PG('1',t,s));
+obj.. zz=e=sum((t,s),prob(s)*lambdaDA(t,s)*PG('1',t,s))
++sum((t,gg,s),prob(s)*(gdat(gg,'a')*v(gg,t,s)+gdat(gg,'d')*PG(gg,t,s)))    ;
 powerflow(i,j,t,s)$conex(i,j)..   PF(i,j,t,s)=e=(delta(i,t,s)-delta(j,t,s))*branch(i,j,'bij');
 kcl(i,t,s).. sum(g$GB(i ,g),Pg(g,t,s))-PD(i,t,s)=e=+sum(j$conex(i, j),PF(i,j,t,s));
 
 model DCPF /all/
-solve DCPF minimizing z using lp
+solve DCPF minimizing zz using mip
 
 parameter sumpg(t,s), sumpd(t,s)   ;
 sumpg(t,s)= sum(g,PG.l(g,t,s));
