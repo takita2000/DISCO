@@ -64,7 +64,9 @@ t21        3.43        3.43        3.43        3.39
 t22        3.37        3.37        3.37        3.5
 t23        3.17        3.17        3.17        3.18
 t24        3.05        3.05        3.05        2.95
+;
 
+PDTotal(t,s)=PDTotal(t,s)*1000;
 scalar PMaxSub /3/
 
 parameter PDem0(i) Demand of each bus   in kw
@@ -193,6 +195,8 @@ delta.fx(slack,t,s)=0;
 PF.up(i,j,t,s)$(conex(i,j))=branch(i,j,'limit') ;
 PF.lo(i,j,t,s)$(conex(i,j))=-branch(i,j,'limit') ;
 
+PG.fx(g,'t0',s)=0;
+
 
 
 equations
@@ -213,5 +217,4 @@ sumpg(t,s)= sum(g,PG.l(g,t,s));
 sumpd(t,s)= sum(i,Pd(i,t,s)) ;
 
 display sumpg , sumpd;
-
 
