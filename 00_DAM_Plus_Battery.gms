@@ -435,9 +435,44 @@ option optcr=0;
 model DCPF /all/
 solve DCPF minimizing zz using mip
 
-parameter sumpg(t,s), sumpd(t,s)   ;
-sumpg(t,s)= sum(g,PG.l(g,t,s));
-sumpd(t,s)= sum(i,Pd(i,t,s)) ;
 
-display sumpg , sumpd;
+parameter SUMDemand(t);
+SUMDemand(t)=sum(s,prob(s)*PDtotal(t,s));
+
+parameter SUMDA;
+SUMDA(t)=sum(s,prob(s)*PG.l('1',t,s));
+
+parameter SUMPG(t);
+SUMPG(t)=sum((gg,s),prob(s)*PG.l(gg,t,s));
+
+parameter SUMPESS(t);
+SUMPESS(t)=sum((bb,s),prob(s)*PESS.l(bb,t,s));
+
+parameter SUMIL;
+SUMIL(t)=sum(s,prob(s)*PDAIL.l(t,s));
+
+parameter DACOST(t);
+DACOST(t)=sum(s, prob(s)*lambdaDA(t,s)*PG.l('1',t,s)) ;
+
+parameter PREDGCOST(t);
+PREDGCOST(t)=sum((gg,s),prob(s)*(gdat(gg,'a')*v.l(gg,t,s)+gdat(gg,'b')*y.l(gg,t,s)+gdat(gg,'c')*z.l(gg,t,s))) ;
+
+parameter ILCOST(t);
+ILCOST(t)=sum(s,prob(s)*PDAIL.l(t,s)*BetaIL(t)) ;
+
+parameter TCOST;
+TCOST(t)=DACOST(t)+ ILCOST(t)+ PREDGCOST(t);
+
+parameter PDGG(gg,t);
+PDGG(gg,t)=sum(s,prob(s)*PG.l(gg,t,s));
+
+parameter PESSS(bb,t);
+PESSS(bb,t)=sum(s,prob(s)*PESS.l(bb,t,s));
+
+display SUMDEMAND, SUMDA, SUMPG, SUMPESS, SUMIL, pf.l ,PD ,lambdaDA  , TCOST, DACOST , PREDGCOST ,ILCOST
+
+
+$set matout "'GAMS_SOLVE_SC1_Results_DAM.gdx' SUMDEMAND, SUMDA, SUMPG,SUMPESS, SUMIL, pf ,PD ,lambdaDA  , TCOST, DACOST , PREDGCOST ,ILCOST, PDGG, PESSS, v  ";
+execute_unload %matout%;
+
 
