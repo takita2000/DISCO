@@ -2,8 +2,8 @@ function Matlab_to_RTOM(PDA_STAR,PDTotal,LambdaRT,PK1,PILDA_STAR,v_star, PESS_ST
 guel = @(s,v) strcat(s,strsplit(num2str(v)));
 
 PQ=33;
-NDG=[22,25];
-NBAT=[18,33];
+NDG=[4,14];
+NBAT=[10,17,20,30];
 PDA_STARp.name='PDA_STAR';                  
 PDA_STARp.val = PDA_STAR;
 PDA_STARp.type='parameter';

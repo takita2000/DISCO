@@ -113,7 +113,7 @@ PPV=[0
 PK1=[0 0 
       PDG'  ];
  
-PDA_STAR=SUMDA.val;
+PDA_STAR=SUMDA.val/1000;
 PILDA_STAR =SUMIL.val(38:61);
 PESS_STAR=PESS';
  
