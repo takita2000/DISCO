@@ -349,6 +349,15 @@ Table PW(w,t,s) wind power generation
 (18,21,33).t23        166            166           166           166
 (18,21,33).t24        0.66           0.66          0.66          0.66
 
+
+parameter PWI(i)
+/
+10    33
+24    18
+27    21
+/
+
+
 Table PPV(pv,t,s) wind power generation
                      1        2        3        4
 (10,24,27).t1        0        0        0        0
@@ -375,6 +384,14 @@ Table PPV(pv,t,s) wind power generation
 (10,24,27).t22       0        0        0        0
 (10,24,27).t23       0        0        0        0
 (10,24,27).t24       0        0        0        0
+
+parameter PVI(i)
+/
+10    1
+24    1
+27    1
+/
+
 
 *************************************************
 variables
@@ -475,7 +492,8 @@ eq2(t,i,j,s)$R(i,j,'Ft')..  Pf(i,j,t,s) =e=(1/R(i,j,'react'))*(delta(i,t,s)-delt
 eq3_1(t,i,j,s)$R(i,j,'Ft')..    Pf(i,j,t,s) =g= -R(i,j,"pfmax") ;
 eq3_2(t,i,j,s)$R(i,j,'Ft')..    Pf(i,j,t,s) =l= R(i,j,"pfmax");
 eq4_00(t,i,j,s)..             pf(i,j,t,s)=e= -pf(j,i,t,s);
-eq4(t,load,s)..             sum(g,PDG(g,t,s))$GI(load)+sum(b,PESS(b,t,s))$BI(load)+PIL(load,t,s)-sum(j$R(load,j,'Ft'),pf(load,j,t,s)) =e= PD(load,t,s);
+eq4(t,load,s)..             sum(g,PDG(g,t,s))$GI(load)+sum(b,PESS(b,t,s))$BI(load)+PIL(load,t,s)+sum(pv,PPV(pv,t,s))$PVI(load)
++sum(w,PW(w,t,s))$PWI(load)+PIL(load,t,s)-sum(j$R(load,j,'Ft'),pf(load,j,t,s)) =e= PD(load,t,s);
 eq5(t,slack,s)..            PDA(t,s)-sum(j$R(slack,j,'Ft'),pf(slack,j,t,s)) =e=0;
 *************************************************
 

@@ -1,0 +1,55 @@
+B 2 C o m p i l a t i o n
+B 596 Equation Listing    SOLVE DAOM Using MIP From line 533
+D 597 eq1
+D 1137 eq6
+D 1202 eq2
+D 1327 eq3_1
+D 1392 eq3_2
+D 1457 eq4_00
+D 1522 eq4
+D 1599 eq5
+D 1664 eq8_1
+D 1729 eq8_2
+D 1794 eq14
+D 1859 eq9
+D 1924 eq10
+D 1989 eq7
+D 2054 eq15
+D 2119 eq16
+D 2604 eq41
+D 2729 eq41_1
+D 2796 eq42
+D 2921 eq43
+D 2986 eq44
+D 3051 eq47
+B 3118 Column Listing      SOLVE DAOM Using MIP From line 533
+E 3119 zz
+E 3127 PDA
+E 3146 Pf
+E 3162 delta
+E 3181 PDG
+E 3215 v
+E 3234 y
+E 3250 z
+E 3266 PDAIL
+E 3282 PIL
+E 3307 SoC
+E 3332 Pdch
+E 3354 Pch
+E 3376 PESS
+E 3410 x
+B 3431 Model Statistics    SOLVE DAOM Using MIP From line 533
+B 3447 Solution Report     SOLVE DAOM Using MIP From line 533
+B 3474 E x e c u t i o n
+I 3475 SUMDemand
+I 3485 SUMDA
+I 3490 SUMPG
+I 3495 SUMPESS
+I 3500 SUMIL
+I 3505 Pf
+I 3509 PD
+I 4283 lambdaDA
+I 4314 TCOST
+I 4319 DACOST
+I 4324 PREDGCOST
+I 4329 ILCOST
