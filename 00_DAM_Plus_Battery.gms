@@ -168,8 +168,8 @@ parameter prob(s)
 * PHASE 2 ***********************************************
 table gdat(gg,*) unit data
        pmin   pmax         rdown  rup    a      b         c      d       PG0   V0    MUP   MDN
-4      100    500          200    200    1      25        10     80      0     0     1     1
-14     100    500          200    200    1      25        10     80      0     0     1     1
+4      100    500          200    200    1      25        10     10      0     0     1     1
+14     100    500          200    200    1      25        10     40      0     0     1     1
 
 ;
 
@@ -191,8 +191,8 @@ PG(g,t,s)    Active power generated from each bus
 **********************************************************
 ;
 
-PG.up(gg,t,s)=gdat(gg,'pmax');
-PG.lo(gg,t,s)=gdat(gg,'pmin');
+*PG.up(gg,t,s)=gdat(gg,'pmax');
+*PG.lo(gg,t,s)=gdat(gg,'pmin');
 delta.fx(slack,t,s)=0;
 
 binary variables v(gg,t,s)  ,y(gg,t,s),z(gg,t,s);
@@ -212,12 +212,29 @@ equations
 obj              objective function
 powerflow(i,j,t,s)        powerflow
 kcl              kcl in each node
+
+*** Phase 2 *****************************
+eq8_1
+eq8_2
+eq9
+eq10
+eq14
+*****************************************
 ;
 
 obj.. zz=e=sum((t,s),prob(s)*lambdaDA(t,s)*PG('1',t,s))
 +sum((t,gg,s),prob(s)*(gdat(gg,'a')*v(gg,t,s)+gdat(gg,'b')*y(gg,t,s)+gdat(gg,'c')*z(gg,t,s)+gdat(gg,'d')*PG(gg,t,s)))    ;
 powerflow(i,j,t,s)$conex(i,j)..   PF(i,j,t,s)=e=(delta(i,t,s)-delta(j,t,s))*branch(i,j,'bij');
 kcl(i,t,s).. sum(g$GB(i ,g),Pg(g,t,s))-PD(i,t,s)=e=+sum(j$conex(i, j),PF(i,j,t,s));
+
+********PHase 2*************************************************
+eq8_1(gg,t,s)$(ord(t) gt 1)..  PG(gg,t,s)=l=gdat(gg,'pmax')*v(gg,t,s) ;
+eq8_2(gg,t,s)$(ord(t) gt 1)..  PG(Gg,t,s)=g=gdat(gg,'pmin')*v(gg,t,s) ;
+eq9(gg,t,s)$(ord(t) gt 1).. PG(gg,t,s)-PG(gg,t-1,s)=l=gdat(gg,'rup');
+eq10(gg,t,s)$(ord(t) gt 1)..     PG(gg,t-1,s)-PG(gg,t,s)=l=gdat(gg,'rdown');
+eq14(gg,t,s)$(ord(t) gt 1)..     y(gg,t,s)-z(gg,t,s)=e=v(gg,t,s)-v(gg,t-1,s);
+*********************************************************************
+
 
 model DCPF /all/
 solve DCPF minimizing zz using mip
