@@ -6,8 +6,10 @@ g(i) index of generators /1, 4 , 14/
 t time period   /t0*t24/
 s scenarios    /1*4/
 gg(g) pq bus with generators /4, 14/
+bb(i) pq bus with generators /10, 17, 20, 30/
 pheads heads of generators /pmin,  pmax,   rdown,  rup /
 GB(i,g)  /1.1, 4.4 , 14.14/
+BatB(i,bb) /10.10, 17.17, 20.20, 30.30/
 alias (i,j)
 
 
@@ -277,6 +279,16 @@ v.fx(gg,'t0',s)=0;
 
 
 
+** Phase 6 **************************************
+table bdat(bb,*) battery  data
+       EtaCh  EtaDch   PchMAX   PdchMAX   SoC0      SoCMax    SoCMin
+10     0.95   0.95     0.1      0.1       0.15      0.95      0.05
+17     0.95   0.95     0.1      0.1       0.15      0.95      0.05
+20     0.95   0.95     0.1      0.1       0.15      0.95      0.05
+30     0.95   0.95     0.1      0.1       0.15      0.95      0.05
+*************************************************
+
+
 
 ;
 
@@ -294,9 +306,9 @@ eq14
 *****************************************
 
 *** PH3 ADDING  INTERRUPTIBLE ***********
-*eq7
-*eq15
-*eq16
+eq7
+eq15
+eq16
 *****************************************
 ;
 
@@ -304,7 +316,7 @@ obj.. zz=e=sum((t,s),prob(s)*lambdaDA(t,s)*PG('1',t,s))
 +sum((t,gg,s),prob(s)*(gdat(gg,'a')*v(gg,t,s)+gdat(gg,'b')*y(gg,t,s)+gdat(gg,'c')*z(gg,t,s)+gdat(gg,'d')*PG(gg,t,s)))   ;
 *+sum((t,s),BetaIL(t)*PDAIL(t,s))   ;
 powerflow(i,j,t,s)$conex(i,j)..   PF(i,j,t,s)=e=(delta(i,t,s)-delta(j,t,s))*branch(i,j,'bij');
-kcl(i,t,s).. sum(g$GB(i ,g),Pg(g,t,s))-PD(i,t,s)=e=+sum(j$conex(i, j),PF(i,j,t,s));
+kcl(i,t,s).. sum(g$GB(i ,g),Pg(g,t,s))+sum(bb$BatB(i,bb),PESS(bb,t,s))-PD(i,t,s)=e=+sum(j$conex(i, j),PF(i,j,t,s));
 
 ********PHase 2*************************************************
 eq8_1(gg,t,s)$(ord(t) gt 1)..  PG(gg,t,s)=l=gdat(gg,'pmax')*v(gg,t,s) ;
@@ -316,15 +328,24 @@ eq14(gg,t,s)$(ord(t) gt 1)..     y(gg,t,s)-z(gg,t,s)=e=v(gg,t,s)-v(gg,t-1,s);
 
 *** PH3*************************************************************
 ** Phase 4 **************************************
-*eq7(pq,t,s)..  PD(pq,t,s)-sum(gg$GB(pq ,gg),Pg(gg,t,s)) =l= TrMAX(pq);
-*eq15(pq,t,s).. PIL(pq,t,s) =l= 0.1*PD(pq,t,s);
-*eq16(t,s).. sum(pq,PIL(pq,t,s))=e=PDAIL(t,s);
+eq7(pq,t,s)..  PD(pq,t,s)-sum(gg$GB(pq ,gg),Pg(gg,t,s)) =l= TrMAX(pq);
+eq15(pq,t,s).. PIL(pq,t,s) =l= 0.1*PD(pq,t,s);
+eq16(t,s).. sum(pq,PIL(pq,t,s))=e=PDAIL(t,s);
 *************************************************
 
 
+** Phase 6 **************************************
+eq41(b,t,s)$(ord(t) gt 1)..  SoC(b,t,s)  =e= SoC(b,t-1,s)-Pdch(b,t,s)/bdat(b,'EtadCh')+Pch(b,t,s)*bdat(b,'EtaCh');
+eq41_1(b,t,s)$(ord(t) eq 1)..  SoC(b,t,s)  =e= bdat(b,'SoC0') -Pdch(b,t,s)+Pch(b,t,s);
+eq42(b,t,s)..                PESS(b,t,s) =e= Pdch(b,t,s)-Pch(b,t,s);
+eq43(b,t,s)..                Pch(b,t,s)  =l= x(b,t,s)*bdat(b,'PchMAX');
+eq44(b,t,s)..                Pdch(b,t,s) =l= (1-x(b,t,s))*bdat(b,'PdchMAX');
+eq47(b,t,s)..                SoC(b,t,s)=l=bdat(b,'SoCMAX');
+*************************************************
 
 ********************************************************************
-option optcr=0
+option optca=0;
+option optcr=0;
 model DCPF /all/
 solve DCPF minimizing zz using mip
 
