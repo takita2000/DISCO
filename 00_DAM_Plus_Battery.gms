@@ -1,8 +1,8 @@
 sets
 i bus numbers  /1*3/
-g(i) index of generators  /1*3/
+g(i) index of generators  /1*2/
 pheads heads of generators /pmin,  pmax,   rdown,  rup /
-
+GB(i,g)  /1.1 ,2.2/
 alias (i,j)
 
 
@@ -11,7 +11,6 @@ parameter PD(i) Demand of each bus
 1 0
 2 3.4
 3 1.9
-
 /
 
 table branch(i,j,*) Network technical characteristics
@@ -34,14 +33,9 @@ display conex
 * PHASE 2 ***********************************************
 table gdat(g,*) unit data
        pmin  pmax   rdown  rup    a      b         c      d       PG0   V0    MUP   MDN
-3      1     8      2      2      1      25        10     80      0     0     1     1
+2      1     8      2      2      1      25        10     80      0     0     1     1
 ;
-table  GB(i,g)
-  1  2  3
-1 1
-2    1
-3       1
-;
+
 
 variable
 z        objective value
@@ -50,8 +44,8 @@ PF(i,j)  Active power flowing from bus i to bus j
 P(i)     Net active power of each bus
 PG(g)    Active power generated from each bus
 ;
-PG.fx('2')=2;
-PG.fx('3')=0;;
+PG.up('2')=2;
+PG.lo('2')=0;
 delta.fx('1')=0;
 equations
 obj              objective function
@@ -61,7 +55,7 @@ kcl              kcl in each node
 ;
 
 
-obj.. z=e=100*PG('1')+20*PG('1')+10000*PG('3');
+obj.. z=e=100*PG('1')+20000*PG('2');
 powerflow(i,j)$conex(i,j)..   PF(i,j)=e=(delta(i)-delta(j))*branch(i,j,'bij');
 kcl(i).. sum(g$GB(i ,g),Pg(g))-PD(i)=e=+sum(j$conex(i, j),PF(i,j));
 
