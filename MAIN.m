@@ -122,7 +122,7 @@ PESS_STAR=PESS';
 for t=1
 v_star=double(PDG(:,t)'>0);
 Matlab_to_RTOM(PDA_STAR(t),PDTotal(t),LambdaRT,PK1(t,:),PILDA_STAR (t),v_star, PESS_STAR(t,:))
- gams('00_RTM')
+%  gams('00_RTM')
 GAMS_To_MATLAB_RT(t,PREDGCOST)
 end
 clear

@@ -71,7 +71,7 @@ PPESS.compress='false';
 PPESS=rgdx(GDXNAME,PPESS );
 
 
-PDG=[PPDG.val(22,38:61);PPDG.val(25,38:61)];
-PESS=[PPESS.val(18,38:61);PPESS.val(33,38:61)];
+PDG=[PPDG.val(4,35:58);PPDG.val(14,35:58)];
+PESS=[PPESS.val(10,35:58);PPESS.val(17,35:58);PPESS.val(20,35:58);PPESS.val(30,35:58)];
 
 save('ResultP_DAM_DA_RT')

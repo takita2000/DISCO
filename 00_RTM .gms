@@ -5,10 +5,10 @@ i bus number /i1*i33/
 load(i) PQ busese in the grid /i2*i33/
 slack(i) substation bus   /i1/
 l levels of IL contracts /1*5/
-g        index of DG units /g18, g22 , g33/
-b        index of DG units /b25/
-g2i(g,i) units to nodes /g18.i18, g22.i22, g33.i33/
-b2i(b,i) units to nodes /b25.i25/;
+g        index of DG units /g4, g14/
+b        index of DG units /b10, b17,b20,b30/
+g2i(g,i) units to nodes /g4.i4, g14.i14/
+b2i(b,i) units to nodes /b10.i10, b17.i17, b20.i20, b30.i30/;
 alias(i,j)
 
 ** PARAMETERS *******************************************************************************************
