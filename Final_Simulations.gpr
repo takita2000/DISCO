@@ -1,0 +1,417 @@
+[PROJECT]
+
+[RP:00_RTOM (2)]
+1=
+
+[RP:NEW_RTOM]
+1=
+
+[RP:00_BASIC]
+1=
+
+[RP:00_DAOM (1)]
+1=
+
+[RP:22_DAOM _FINAL]
+1=
+
+[RP:00_DAOM ]
+1=
+
+[RP:02_RTOM - COPY]
+1=
+
+[RP:03_RTOM ]
+1=
+
+[GDXDISP: LambdaRT Par 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: LambdaRT Par 0]
+PlaneDim=0
+RowDim=0
+Squeeze=1
+Order=
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: PDA_STAR Par 0]
+PlaneDim=0
+RowDim=0
+Squeeze=1
+Order=
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: v_STAR Par 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[RP:LP_33BUS_UNCERTAINTY_TAP_MULTIOBJECTIVE]
+1=
+
+[GDXDISP: IL_Factor Par 0]
+PlaneDim=0
+RowDim=0
+Squeeze=1
+Order=
+Decim=7
+PlaneRownr=-1
+
+[RP:01_DAOM]
+1=
+
+[RP:DAOM]
+1=
+
+[RP:DAOM _1]
+1=
+
+[GDXDISP: PPIL Par 0]
+PlaneDim=0
+RowDim=0
+Squeeze=1
+Order=
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: QRT Var 0]
+PlaneDim=0
+RowDim=0
+Squeeze=1
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: PRT Var 0]
+PlaneDim=0
+RowDim=0
+Squeeze=1
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: PPDG Par 0]
+PlaneDim=0
+RowDim=0
+Squeeze=1
+Order=
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: P_time Par 0]
+PlaneDim=0
+RowDim=0
+Squeeze=1
+Order=
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: PDG Var 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: PIL Var 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: V Var 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[RP:12_DAM ]
+1=
+
+[RP:11_DAM]
+1=
+
+[RP:03_DAOM_PREVIOUS]
+1=
+
+[GDXDISP: PK1 Par 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[RP:01_DAOM_SEND_TO_MATLAB]
+1=
+
+[RP:03_DAOM_FINAL]
+1=
+
+[RP:RTOM  - COPY]
+1=
+
+[RP:00_RTOM  - PH1 - COPY]
+1=
+
+[RP:00_RTOM  - PH1 - COPY - COPY]
+1=
+
+[RP:00_RTOM  - PH1 - COPY - COPY - COPY]
+1=
+
+[RP:00_RTOM  - PH1 - COPY - COPY - COPY - COPY]
+1=
+
+[RP:SCOPF]
+1=
+
+[RP:00_RTOM  - PH2]
+1=
+
+[RP:00_RTOM  - PH1]
+1=
+
+[GDXDISP: DACOST Par 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[RP:RTOM ]
+1=
+
+[GDXDISP: PDTotal Par 0]
+PlaneDim=0
+RowDim=0
+Squeeze=1
+Order=
+Decim=7
+PlaneRownr=-1
+
+[RP:004_DA - FINAL]
+1=
+
+[GDXDISP: PD Par 2]
+PlaneDim=0
+RowDim=2
+Squeeze=1
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: PDG Var 2]
+PlaneDim=0
+RowDim=2
+Squeeze=1
+Order=1,2,3
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: Pf Var 3]
+PlaneDim=0
+RowDim=3
+Squeeze=1
+Order=1,2,3,4
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: SUMDA Par 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: SUMDemand Par 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: SUMIL Par 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: SUMPG Par 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: TCOST Par 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: lambdaDA Par 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: ILCOST Par 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: DGCOST Par 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: PILDA_STAR Par 0]
+PlaneDim=0
+RowDim=0
+Squeeze=1
+Order=
+Decim=7
+PlaneRownr=-1
+
+[SOLVERS]
+NLP=CONOPT
+LP=CPLEX
+MIP=CPLEX
+MIQCP=CPLEX
+QCP=CPLEX
+RMIP=CPLEX
+RMIQCP=CPLEX
+
+[RP:00_RTOM  - FINAL]
+1=
+
+[RP:SC1_DA+RT_RTM]
+1=
+
+[RP:SC1_DA+RT_RTM - COPY]
+1=
+
+[RP:OPFNEW11111111111]
+1=
+
+[RP:OPFNEW - COPY]
+1=
+
+[RP:OPFNEW]
+1=
+
+[RP:SOC_VS_VOLTAGE_2]
+1=
+
+[RP:SC1_DA+RT_RTM ]
+1=
+
+[RP:00_DAOM]
+1=
+
+[RP:RTM ]
+1=
+
+[RP:DAM]
+1=
+
+[RP:UNTITLED_1]
+1=
+
+[RP:SC1_DA+RT_DAM]
+1=
+
+[RP:UC]
+1=
+
+[RP:00_DAM]
+1=
+
+[RP:00_DAM_FINAL]
+1=
+
+[RP:00_DAM - COPY]
+1=
+
+[GDXDISP: SUMPESS Par 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: v Var 3]
+PlaneDim=0
+RowDim=3
+Squeeze=1
+Order=1,2,3,4
+Decim=7
+PlaneRownr=-1
+
+[RP:00_RTM ]
+1=
+
+[RP:OPF]
+1=
+
+[RP:01_DAM]
+1=
+
+[RP:00_DAM_PLUS_BATTERY - 1]
+1=
+
+[RP:00_DAM_PLUS_BATTERY]
+1=
+
+[MRUFILES]
+1=C:\Users\REZA\OneDrive\Second_Article_2\02_1_Simulations\GITGITDISCO\00_DAM_Plus_Battery.gms
+2=C:\Users\REZA\OneDrive\Second_Article_2\02_1_Simulations\GITGITDISCO\DISCO\00_DAM_Plus_Battery.gms
+3=C:\Users\REZA\OneDrive\Second_Article_2\02_1_Simulations\GAMSCODE\00_DAM_Plus_Battery.lst
+4=C:\Users\REZA\OneDrive\Second_Article_2\02_1_Simulations\GAMSCODE\00_DAM_Plus_Battery.gms
+5=C:\Users\REZA\OneDrive\Second_Article_2\02_1_Simulations\GAMSCODE\00_DAM_Plus_Battery - 1.gms
+6=C:\Users\REZA\OneDrive\Second_Article_2\02_1_Simulations\GAMSCODE\01_DAM.gms
+7=C:\Users\REZA\OneDrive\Second_Article_2\02_Simulations\00_Total_Code\00_DAM_Plus_Battery.lst
+8=C:\Users\REZA\OneDrive\Second_Article_2\02_Simulations\00_Total_Code\00_DAM_Plus_Battery.gms
+9=E:\PhD\Courses\Conejo\Nonlinear Programming\6. GAMS\opf.gms
+
+[OPENWINDOW_1]
+FILE0=C:\Users\REZA\OneDrive\Second_Article_2\02_1_Simulations\GITGITDISCO\DISCO1\00_DAM_Plus_Battery - 1.gms
+FILE1=C:\Users\REZA\OneDrive\Second_Article_2\02_1_Simulations\GITGITDISCO\DISCO1\00_DAM_Plus_Battery - 1.gms
+MAXIM=1
+TOP=130
+LEFT=130
+HEIGHT=416
+WIDTH=1154
