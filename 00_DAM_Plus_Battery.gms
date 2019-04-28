@@ -2,6 +2,8 @@ sets
 i bus numbers  /1*33/
 slack(i) slack bus /1/
 pq(i) pq buses    /2*33/
+g(pq) index of generators  /4, 14/
+pheads heads of generators /pmin,  pmax,   rdown,  rup /
 alias (i,j)
 
 scalar BASE_MVA /100/;
@@ -98,6 +100,17 @@ LineData(i,j,'con')$(ord(i)>ord(j))=LineData(j,i,'con');
 
 LineData(i,j,'react')=LineData(i,j,'react')/Zbase;
 
+* PHASE 2 ***********************************************
+table gdat(g,*) unit data
+       pmin  pmax   rdown  rup    a      b         c      d       PG0   V0    MUP   MDN
+4      100   800    200    200    1      25        10     80      0     0     1     1
+14     100   800    200    200    1      25        10     80      0     0     1     1
+
+;
+
+gdat(g,pheads)=(gdat(g,pheads)/1000)/ Sbase;
+display gdat
+*********************************************************
 
 
 variable
@@ -108,23 +121,43 @@ P(i)     Net active power of each bus
 PG(i)    Active power generated from each bus
 ;
 PG.fx(pq)=0;
+PG.up(g)=gdat(g,'pmax');
+PG.lo(g)=gdat(g,'pmin');
 delta.fx(slack)=0;
+
+
+
+
+
+
+
+
+
 equations
 obj              objective function
 powerflow        powerflow
 kcl              kcl in each node
 Netpower         Net power in each node
+
+* PHASE 2 **********************************************
+
+
+*******************************************************
 ;
 
 
-obj.. z=e=1;
+obj.. z=e=1000*PG('1');
 powerflow(i,j)$(LineData(i,j,'con'))..   PF(i,j)=e=(delta(i)-delta(j))/ LineData(i,j,'react')   ;
 kcl(i).. P(i)=e=sum(j$LineData(i,j,'con') ,pF(i,j))  ;
 Netpower(i).. P(i)=e=PG(i)-PD(i);
 
+* PHASE 2 **********************************************
+
+
+*******************************************************
 
 model DCPF /all/
-solve DCPF maximizing z using lp
+solve DCPF minimizing z using lp
 
 ********* return actual values *******************************
 parameters   PF_actual(i,j), P_actual(i),  PG_actual(i);
@@ -133,7 +166,21 @@ P_actual(i)=P.l(i)*Sbase ;
 PG_actual(i)=PG.l(i)*Sbase;
 
 ***************************************************
-display PF_actual, P_actual,  PG_actual;
+
+
+
+
+
+
+parameter sumpg, sumpd   ;
+sumpg= sum(i,PG_actual(i));
+
+sumpd= sum(i,Pd(i)) ;
+
+
+
+
+display PF_actual, P_actual,  PG_actual , sumpg , sumpd;
 
 
 
