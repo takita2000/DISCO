@@ -4,8 +4,19 @@ slack(i) slack bus /1/
 pq(i) pq buses    /2*33/
 alias (i,j)
 
+scalar BASE_MVA /100/;
+scalar BASE_KV /12.66/;
 
-parameter PD(i) Demand of each bus
+scalars
+Vbase
+Sbase
+Zbase
+;
+Vbase = BASE_KV * 10**3;
+Sbase = BASE_MVA * 10**6;
+Zbase = Vbase**2 / Sbase;
+
+parameter PD(i) Demand of each bus   in kw
 /
 1        0
 2        100
@@ -41,7 +52,10 @@ parameter PD(i) Demand of each bus
 32       210
 33       60
 
-/
+/ ;
+
+PD(i)=(PD(i)/1000)/ Sbase;
+
 
 Table LineData(i,j,*)     Data of each line
                     react         con
@@ -82,6 +96,8 @@ Table LineData(i,j,*)     Data of each line
 LineData(i,j,'react')$(ord(i)>ord(j))=LineData(j,i,'react');
 LineData(i,j,'con')$(ord(i)>ord(j))=LineData(j,i,'con');
 
+LineData(i,j,'react')=LineData(i,j,'react')/Zbase;
+
 
 
 variable
@@ -110,7 +126,14 @@ Netpower(i).. P(i)=e=PG(i)-PD(i);
 model DCPF /all/
 solve DCPF maximizing z using lp
 
+********* return actual values *******************************
+parameters   PF_actual(i,j), P_actual(i),  PG_actual(i);
+PF_actual(i,j)=PF.l(i,j)*Sbase;
+P_actual(i)=P.l(i)*Sbase ;
+PG_actual(i)=PG.l(i)*Sbase;
 
+***************************************************
+display PF_actual, P_actual,  PG_actual;
 
 
 
