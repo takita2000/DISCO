@@ -2,7 +2,7 @@ sets
 i bus numbers  /1*33/
 slack(i) slack bus /1/
 pq(i) pq buses    /2*33/
-g(pq) index of generators  /4, 14/
+Gen(i) index of generators /4,14 /
 
 pheads heads of generators /pmin,  pmax,   rdown,  rup /
 
@@ -63,46 +63,52 @@ PD(i)=(PD(i)/1000)/ Sbase;
 
 
 Table LineData(i,j,*)     Data of each line
-                    react         con
-1.2                 0.0470        yes
-2.3                 0.2511        yes
-3.4                 0.1864        yes
-4.5                 0.1941        yes
-5.6                 0.7070        yes
-6.7                 0.6188        yes
-7.8                 0.2351        yes
-8.9                 0.7400        yes
-9.10                0.7400        yes
-10.11               0.0650        yes
-11.12               0.1238        yes
-12.13               1.1550        yes
-13.14               0.7129        yes
-14.15               0.5260        yes
-15.16               0.5450        yes
-16.17               1.7210        yes
-17.18               0.5740        yes
-2.19                0.1565        yes
-19.20               1.3554        yes
-20.21               0.4784        yes
-21.22               0.9373        yes
-3.23                0.3083        yes
-23.24               0.7091        yes
-24.25               0.7011        yes
-6.26                0.1034        yes
-26.27               0.1447        yes
-27.28               0.9337        yes
-28.29               0.7006        yes
-29.30               0.2585        yes
-30.31               0.9630        yes
-31.32               0.3619        yes
-32.33               0.5302        yes
+                    react         con       limit
+1.2                 0.0470        yes       1000
+2.3                 0.2511        yes       1000
+3.4                 0.1864        yes       1000
+4.5                 0.1941        yes       1000
+5.6                 0.7070        yes       1000
+6.7                 0.6188        yes       1000
+7.8                 0.2351        yes       1000
+8.9                 0.7400        yes       1000
+9.10                0.7400        yes       1000
+10.11               0.0650        yes       1000
+11.12               0.1238        yes       1000
+12.13               1.1550        yes       1000
+13.14               0.7129        yes       1000
+14.15               0.5260        yes       1000
+15.16               0.5450        yes       1000
+16.17               1.7210        yes       1000
+17.18               0.5740        yes       1000
+2.19                0.1565        yes       1000
+19.20               1.3554        yes       1000
+20.21               0.4784        yes       1000
+21.22               0.9373        yes       1000
+3.23                0.3083        yes       1000
+23.24               0.7091        yes       1000
+24.25               0.7011        yes       1000
+6.26                0.1034        yes       1000
+26.27               0.1447        yes       1000
+27.28               0.9337        yes       1000
+28.29               0.7006        yes       1000
+29.30               0.2585        yes       1000
+30.31               0.9630        yes       1000
+31.32               0.3619        yes       1000
+32.33               0.5302        yes       1000
 ;
+LineData(i,j,'react')$(LineData(i,j,'react')=0)=LineData(i,j,'react');
+LineData(i,j,'con')$(LineData(i,j,'con')=0)=LineData(i,j,'con');
+LineData(i,j,'Limit')$(LineData(i,j,'Limit')=0)=LineData(i,j,'Limit') ;
 
-LineData(i,j,'react')$(ord(i)>ord(j))=LineData(j,i,'react');
-LineData(i,j,'con')$(ord(i)>ord(j))=LineData(j,i,'con');
+
+parameter conex(i, j) ;
+conex(i,j)$(LineData(i,j,'con') and LineData (i, j,'con'))=1;
+conex(i,j)$(conex(i ,j))=1;
+
 
 LineData(i,j,'react')=LineData(i,j,'react')/Zbase;
-
+LineData(i,j,'Limit')=(LineData(i,j,'Limit')/1000)/ Sbase;
 * PHASE 2 ***********************************************
 table gdat(g,*) unit data
        pmin  pmax   rdown  rup    a      b         c      d       PG0   V0    MUP   MDN
@@ -113,6 +119,9 @@ table gdat(g,*) unit data
 
 gdat(g,pheads)=(gdat(g,pheads)/1000)/ Sbase;
 display gdat
+
+Set GB( i ,Gen) connectivity index of each generating unit to each bus
+/ 4.g4, 14.g14 / ;
 *********************************************************
 
 
@@ -120,7 +129,7 @@ display gdat
 variable
 z        objective value
 delta(i) angle of each bus
-PF(i,j)  Active power flowing from bus i to bus j
+Pij(i,j)  Active power flowing from bus i to bus j
 P(i)     Net active power of each bus
 PG(i)    Active power generated from each bus
 ;
@@ -136,7 +145,7 @@ display PG.up
 
 equations
 obj              objective function
-powerflow        powerflow
+powerflow(i,j)        powerflow
 kcl              kcl in each node
 Netpower         Net power in each node
 
@@ -147,12 +156,14 @@ Netpower         Net power in each node
 ;
 
 
-
 obj.. z=e=1000*PG('1')+100*PG('14')+10*PG('4');
-powerflow(i,j)$(LineData(i,j,'con'))..   PF(i,j)=e=(delta(i)-delta(j))/ LineData(i,j,'react')   ;
+powerflow(i,j)$(conex(i,j))..   Pij(i,j)=e=(delta(i)-delta(j))/ LineData(i,j,'react')   ;
 kcl(i).. P(i)=e=sum(j$LineData(i,j,'con') ,pF(i,j))  ;
-Netpower(i).. P(i)=e=PG(i)-PD(i);
+Netpower(i).. P(i)=e=+sum(Gen$GB(i ,Gen), Pg(Gen))  -PD(i);
 
+
+const2 ( bus , t ) . . +sum( Gen$GB ( bus , Gen ) , Pg ( Gen , t ) )
+WD ( t , ’ d ’ )BusData ( bus , ’pd ’ ) / Sbase=e=+sum( node$conex (node , bus ) ,Pij ( bus , node , t ) ) ;
 * PHASE 2 **********************************************
 
 
