@@ -195,7 +195,7 @@ PG.up(gg,t,s)=gdat(gg,'pmax');
 PG.lo(gg,t,s)=gdat(gg,'pmin');
 delta.fx(slack,t,s)=0;
 
-binary variables v(gg,t,s)  this variable is 1 if unit g is on in hour t ;
+binary variables v(gg,t,s)  ,y(gg,t,s),z(gg,t,s);
 PF.up(i,j,t,s)$(conex(i,j))=branch(i,j,'limit') ;
 PF.lo(i,j,t,s)$(conex(i,j))=-branch(i,j,'limit') ;
 *** PHase2*************************
@@ -215,7 +215,7 @@ kcl              kcl in each node
 ;
 
 obj.. zz=e=sum((t,s),prob(s)*lambdaDA(t,s)*PG('1',t,s))
-+sum((t,gg,s),prob(s)*(gdat(gg,'a')*v(gg,t,s)+gdat(gg,'d')*PG(gg,t,s)))    ;
++sum((t,gg,s),prob(s)*(gdat(gg,'a')*v(gg,t,s)+gdat(gg,'b')*y(gg,t,s)+gdat(gg,'c')*z(gg,t,s)+gdat(gg,'d')*PG(gg,t,s)))    ;
 powerflow(i,j,t,s)$conex(i,j)..   PF(i,j,t,s)=e=(delta(i,t,s)-delta(j,t,s))*branch(i,j,'bij');
 kcl(i,t,s).. sum(g$GB(i ,g),Pg(g,t,s))-PD(i,t,s)=e=+sum(j$conex(i, j),PF(i,j,t,s));
 
