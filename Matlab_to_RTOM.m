@@ -1,4 +1,4 @@
-function Matlab_to_RTOM(PDA_STAR,PDTotal,LambdaRT,PK1,PILDA_STAR,v_star, PESS_STAR)
+function Matlab_to_RTOM(PDA_STAR,PDTotal,LambdaRT,PK1,PILDA_STAR,v_star, PESS_STAR, PPW, PPPV)
 guel = @(s,v) strcat(s,strsplit(num2str(v)));
 
 PQ=33;
@@ -86,5 +86,13 @@ PESS_STARp.uels =guel('b',NBAT) ;
 PESS_STARp.form = 'full';
 
 
+PWp.name='PPW';                  
+PWp.val = PPW;
+PWp.type='parameter';
 
-wgdx('MATLAB_TO_RTOM',  PDA_STARp,PDTotalp,LambdaRTp,PK1p,PILDA_STARp,v_starp, PESS_STARp);
+PPVp.name='PPPV';                  
+PPVp.val = PPPV;
+PPVp.type='parameter';
+
+
+wgdx('MATLAB_TO_RTOM',  PDA_STARp,PDTotalp,LambdaRTp,PK1p,PILDA_STARp,v_starp, PESS_STARp, PWp, PPVp);

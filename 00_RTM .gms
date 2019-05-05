@@ -7,13 +7,19 @@ slack(i) substation bus   /i1/
 l levels of IL contracts /1*5/
 g        index of DG units /g4, g14/
 b        index of DG units /b10, b17,b20,b30/
+ww       pq bus with wind generation /ww33, ww18, ww21/
+pv       pq bus with pv generation   /pv10, pv24, pv27/
 g2i(g,i) units to nodes /g4.i4, g14.i14/
-b2i(b,i) units to nodes /b10.i10, b17.i17, b20.i20, b30.i30/;
-alias(i,j)
+b2i(b,i) units to nodes /b10.i10, b17.i17, b20.i20, b30.i30/
+ww2i(ww,i) wind buses  / ww33.i33, ww18.i18, ww21.i21/
+pv2i(pv,i) PV buses    /pv10.i10, pv24.i24, pv27.i27/
+alias(i,j)           ;
 
 ** PARAMETERS *******************************************************************************************
 Scalar SBase System base in MVA / 10 /;
-Scalar VBase System base voltage in kV /12.66/;
+Scalar VBase System base voltage in kV /12.66/
+PPW  amount of wind generation
+PPPV power of PV buses;
 **PASE 1****************************************************
 Parameter
 LambdaRT  price in treal time market
@@ -24,15 +30,22 @@ PK1    previous state of DG Units
 PILDA_STAR Interupted load factor
 v_star(g) state of DG Unit if on 1 OW 0
 PESS_STAR(b) amaunt of charge or decharge of battery
+PPW  amount of wind generation
+PPPV power of PV buses
 ;
 
 
 
 
 $GDXIN MATLAB_TO_RTOM
-$LOAD  PDA_STAR PDTotal LambdaRT PK1 PILDA_STAR  v_star   PESS_STAR
+$LOAD  PDA_STAR PDTotal LambdaRT PK1 PILDA_STAR  v_star   PESS_STAR   PPW PPPV
 $GDXIN
 
+parameter PW(ww), PPV(pv)  ;
+PW(ww)=PPW/3;
+PPV(pv)=PPPV/3;
+
+Display PW, PPV;
 
 
 Table LDat(i,j,*)
@@ -358,7 +371,8 @@ eq17..      CF=e=LambdaRT*(PRT-PDA_STAR)+sum(g,gdat(g,'a')*PDG(g)**2+gdat(g,'b')
 eq18(i)..  pn(i)=e=sum(j,v(i)*v(j)*Ldat(i,j,'yl')*cos(delta(i)-delta(j)-Ldat(i,j,'thel')));
 eq19(i)..  qn(i)=e=sum(j,v(i)*v(j)*Ldat(i,j,'yl')*sin(delta(i)-delta(j)-Ldat(i,j,'thel')));
 
-eq20(load)..  sum(g$g2i(g,load),PDG(g))+PIL(load)+sum(b$b2i(b,load),PESS_STAR(b))+PIL(load)-PD(load)=e=pn(load);
+eq20(load)..  sum(g$g2i(g,load),PDG(g))+PIL(load)+sum(ww$ww2i(ww,load),PW(ww))+sum(pv$pv2i(pv,load),PPV(pv))+sum(b$b2i(b,load),PESS_STAR(b))+PIL(load)-PD(load)=e=pn(load);
+
 eq21(load)..  sum(g$g2i(g,load),QDG(g))+QIL(load)-QD(load)=e=qn(load);
 eq22(slack)..  PRT=e=pn(slack);
 eq23(slack)..  QRT=e=qn(slack);
